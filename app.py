@@ -21,7 +21,7 @@ app.mount("/static",StaticFiles(directory="."),
 #GROQ CLIENT
 #----------------------
 
-client=Groq(api_key=("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"))
+client=Groq(api_key=os.getenv("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"))
 
 #----------------------
 #SYSTEM PROMPT
