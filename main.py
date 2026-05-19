@@ -14,7 +14,7 @@ app=FastAPI()
 #------------------------
 #SERVER CSS AND JS FILE
 #------------------------
-app.mount("/static",StaticFiles(directory="."),
+app.mount("/static",StaticFiles(directory="static"),
           name="static")
 
 #----------------------
@@ -134,7 +134,7 @@ async def home():
 
 
 app.mount("/static",
-StaticFiles(directory="statics"),
+StaticFiles(directory="static"),
 name="static")
 #----------------                    
 #CHAT API
