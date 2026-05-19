@@ -465,7 +465,7 @@ async function sendMessage() {
 
     try {
         // 3. Connect to your FastAPI '/chat' route on port 8000
-        const response = await fetch('http://127.0.0.1:8000/chat', {
+        const response = await fetch('https://leobot-v1-ciad.onrender.com/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
