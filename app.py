@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from groq import Groq
 from pydantic import BaseModel
-import os
+import o
 
 app=FastAPI()
 #------------------------
@@ -134,7 +134,7 @@ async def home():
 
 
 app.mount("/static",
-StaticFiles(directory="ststics"),
+StaticFiles(directory="statics"),
 name="static")
 #----------------                    
 #CHAT API
