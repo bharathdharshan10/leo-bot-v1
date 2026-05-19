@@ -134,7 +134,7 @@ async def home():
 
 
 app.mount("/static",
-StaticFiles(directory="ststics"),
+StaticFiles(directory="statics"),
 name="static")
 #----------------                    
 #CHAT API
