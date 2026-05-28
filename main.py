@@ -138,7 +138,7 @@ class Message(BaseModel):
 #------------------
 @app.get("/")
 async def home():
-    return FileResponse("index.html")
+    return FileResponse("/static/index.html")
 
 
 
