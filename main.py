@@ -19,9 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/chat")
-def chat(data:dict):
-    return {"reply":data["message"]}
 #------------------------
 #SERVER CSS AND JS FILE
 #------------------------
@@ -32,7 +29,7 @@ app.mount("/static",StaticFiles(directory="static"),
 #GROQ CLIENT
 #----------------------
 
-client=Groq(api_key=os.getenv("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"))
+client=Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 #----------------------
 #SYSTEM PROMPT
@@ -184,4 +181,3 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
 
     uvicorn.run(app, host="0.0.0.0", port=port)
- 
