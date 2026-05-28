@@ -22,7 +22,7 @@ app.add_middleware(
 #------------------------
 #SERVER CSS AND JS FILE
 #------------------------
-app.mount("/static",StaticFiles(directory="static"),
+app.mount("/static",StaticFiles(directory="."),
           name="static")
 
 #----------------------
@@ -138,7 +138,7 @@ class Message(BaseModel):
 #------------------
 @app.get("/")
 async def home():
-    return FileResponse("static/index.html")
+    return FileResponse("index.html")
 
 
 
