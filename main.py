@@ -142,42 +142,39 @@ async def home():
 
 
 
-app.mount("/static",
-StaticFiles(directory="static"),
-name="static")
 #----------------                    
 #CHAT API
 #----------------
 
 @app.post("/chat")
 async  def chat(data:Message):
-
-    messages.append({"role":"user","content":data.message})
+ payload=[{"role":"system","content":SYSTEM_PROMPT},
+         {"role":"user","content":data.message}]
 #---------------------
     #GROQ RESPONSE
 #---------------------
-    response=client.chat.completions.create(
+ response=client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=messages
+        messages=payload
     )
 #-------------------
 #AI REPLY
 #-------------------
-    ai_reply=response.choices[0].message.content
+ ai_reply=response.choices[0].message.content
 
 #------------------
 #SAVE AI REPLY
 #------------------
-    messages.append({"role":"assistant","content":ai_reply})
+ messages.append({"role":"assistant","content":ai_reply})
 
 #--------------------
 #RENDER CONNECT
 #--------------------
 
-    return {"reply":ai_reply}
+ return {"reply":ai_reply}
 if __name__ == "__main__":
     import uvicorn
 
     port = int(os.environ.get("PORT", 8000))
 
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("main:app", host="0.0.0.0", port=port,reload=False)
