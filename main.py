@@ -138,7 +138,7 @@ class Message(BaseModel):
 #------------------
 @app.get("/")
 async def home():
-    return FileResponse("/static/index.html")
+    return FileResponse("static/index.html")
 
 
 
@@ -148,30 +148,30 @@ async def home():
 
 @app.post("/chat")
 async  def chat(data:Message):
- payload=[{"role":"system","content":SYSTEM_PROMPT},
-         {"role":"user","content":data.message}]
+   messages.append({"role":"user","content":data.message})
 #---------------------
     #GROQ RESPONSE
 #---------------------
- response=client.chat.completions.create(
+   response=client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=payload
+        messages=messages
     )
 #-------------------
 #AI REPLY
 #-------------------
- ai_reply=response.choices[0].message.content
+   ai_reply=response.choices[0].message.content
 
 #------------------
 #SAVE AI REPLY
 #------------------
- messages.append({"role":"assistant","content":ai_reply})
+   messages.append({"role":"assistant","content":ai_reply})
 
 #--------------------
 #RENDER CONNECT
 #--------------------
 
- return {"reply":ai_reply}
+   return {"reply":ai_reply}
+
 if __name__ == "__main__":
     import uvicorn
 
