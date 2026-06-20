@@ -453,7 +453,7 @@ async function sendMessage() {
     DOM.messageInput.value = '';
 
     try {
-        const res = await fetch("https://leobot-v3-tghh.onrender.com/chat", {
+        const res = await fetch("https://leobotv3.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
