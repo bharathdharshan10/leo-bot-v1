@@ -447,50 +447,29 @@ function createMessageElement(message) {
 async function sendMessage() {
     const content = DOM.messageInput.value.trim();
 
-    if (!content) {
-        showToast('Please enter a message', 'error');
-        return;
-    }
+    if (!content) return;
 
-    if (!APP_STATE.currentChat) {
-        createNewChat();
-    }
-
-    // ✅ Add user message to UI
     addUserMessage(content);
-
-    // clear input
     DOM.messageInput.value = '';
-    DOM.messageInput.style.height = 'auto';
 
     try {
-        // ✅ API call
-        const response = await fetch("https://leobot-v3-tghh.onrender.com/chat", {
+        const res = await fetch("https://leobot-v3-tghh.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                message: content,
-                mode: "short" // or "long"
-            })
+            body: JSON.stringify({ message: content })
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        console.log("API Response:", data);
+        addBotMessage(data.reply || "No response");
 
-        // ✅ Safe response handling
-        if (data && data.reply) {
-            addBotMessage(data.reply);
-        } else {
-            addBotMessage("⚠️ Unexpected response from server");
-        }
-
-    } catch (error) {
-        console.error("API connection failed:", error);
-        addBotMessage("❌ Server error. Please try again.");
+    } catch (err) {
+        console.error(err);
+        addBotMessage("Server error");
     }
+}
 
     input.value = "";
 
