@@ -456,39 +456,40 @@ async function sendMessage() {
         createNewChat();
     }
 
-    // 1. Add user message visually to the UI chat stream
+    // ✅ Add user message to UI
     addUserMessage(content);
 
-    // 2. Clear out the input window and reset its height
+    // clear input
     DOM.messageInput.value = '';
     DOM.messageInput.style.height = 'auto';
 
     try {
-        // 3. Connect to your FastAPI '/chat' route on port 8000
-        async function sendMessage() {
-    const input = document.getElementById("input");
-    const message = input.value.trim();
-
-    if (!message) return;
-
-    try {
-        const res = await fetch("https://leobot-v3-tghh.onrender.com/chat", {
+        // ✅ API call
+        const response = await fetch("https://leobot-v3-tghh.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ message }) // ✅ correct
+            body: JSON.stringify({
+                message: content,
+                mode: "short" // or "long"
+            })
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        document.getElementById("chat").innerHTML += `
-            <div><b>You:</b> ${message}</div>
-            <div><b>AI:</b> ${data.reply}</div>
-        `;
-    } catch (err) {
-        console.error("API connection failed:", err);
-        alert("Server not reachable");
+        console.log("API Response:", data);
+
+        // ✅ Safe response handling
+        if (data && data.reply) {
+            addBotMessage(data.reply);
+        } else {
+            addBotMessage("⚠️ Unexpected response from server");
+        }
+
+    } catch (error) {
+        console.error("API connection failed:", error);
+        addBotMessage("❌ Server error. Please try again.");
     }
 
     input.value = "";
