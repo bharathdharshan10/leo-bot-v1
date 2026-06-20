@@ -493,7 +493,7 @@ async function sendMessage() {
     }
 
     input.value = "";
-}
+
 
         const data = await response.json();
         
@@ -512,10 +512,7 @@ async function sendMessage() {
             addBotMessage(JSON.stringify(data));
         }
 
-    } catch (error) {
-        console.error("API connection failed:", error);
-        addBotMessage("Unable to reach the server. Please verify your Python backend is active.");
-    }
+    
 }
 function addUserMessage(content) {
     const message = {
