@@ -1,6 +1,3 @@
-#--------------------
-#PACKAGES
-#--------------------
 
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,32 +7,23 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app=FastAPI()
+app = FastAPI()
+
 app.add_middleware(
-        CORSMiddleware,
+    CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-#------------------------
-#SERVER CSS AND JS FILE
-#------------------------
-app.mount("/static",StaticFiles(directory="."),
-          name="static")
+# Static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-#----------------------
-#GROQ CLIENT
-#----------------------
+# Secure API key
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-client=Groq(api_key="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")
-
-#----------------------
-#SYSTEM PROMPT
-#----------------------
-
-SYSTEM_PROMPT="""You are LEO, an extremely intelligent senior AI developer and software engineer assistant.
+SYSTEM_PROMPT = """You are LEO, an extremely intelligent senior AI developer and software engineer assistant.
 
 Core Identity:
 - You have deep expertise across software engineering, AI, machine learning, web development, backend systems, frontend systems, cloud, cybersecurity, DevOps, databases, APIs, automation, startups, business strategy, mathematics, and debugging.
@@ -119,62 +107,32 @@ Become the user’s trusted AI companion for:
 - normal conversations
 - intelligent discussions
 
-You are highly capable, adaptable, practical, and emotionally intelligent."""
+You are highly capable, adaptable, practical, and emotionally intelligent"""
 
-#---------------------
-#CHAT MEMORY
-#---------------------
-
-messages=[{
-    "role":"system","content":SYSTEM_PROMPT
-}]
-#--------------------
-#CHAT MODEL
-#--------------------
 class Message(BaseModel):
-    message:str
-  #-----------------  
-#HTML HOME PAGE
-#------------------
+    message: str
+
 @app.get("/")
 async def home():
     return FileResponse("static/index.html")
 
-
-
-#----------------                    
-#CHAT API
-#----------------
-
 @app.post("/chat")
-async  def chat(data:Message):
-   messages.append({"role":"user","content":data.message})
-#---------------------
-    #GROQ RESPONSE
-#---------------------
-   response=client.chat.completions.create(
+async def chat(data: Message):
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": data.message}
+    ]
+
+    response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=messages
     )
-#-------------------
-#AI REPLY
-#-------------------
-   ai_reply=response.choices[0].message.content
 
-#------------------
-#SAVE AI REPLY
-#------------------
-   messages.append({"role":"assistant","content":ai_reply})
+    ai_reply = response.choices[0].message.content
 
-#--------------------
-#RENDER CONNECT
-#--------------------
-
-   return {"reply":ai_reply}
+    return {"reply": ai_reply}
 
 if __name__ == "__main__":
     import uvicorn
-
     port = int(os.environ.get("PORT", 8000))
-
-    uvicorn.run("main:app", host="0.0.0.0", port=port,reload=False)
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
