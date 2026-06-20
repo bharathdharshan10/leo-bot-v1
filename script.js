@@ -471,28 +471,6 @@ async function sendMessage() {
     }
 }
 
-    input.value = "";
-
-
-        const data = await response.json();
-        
-        // Log the exact payload to your browser console for tracking
-        console.log("Response data object received:", data);
-
-        // 4. Safely handle the response structure without displaying default errors
-        if (data && data.reply) {
-            addBotMessage(data.reply);
-        } else if (data && data.response) {
-            addBotMessage(data.response);
-        } else if (typeof data === 'string') {
-            addBotMessage(data);
-        } else {
-            // Safe fallback: stringify whatever object arrived so the user sees the real text
-            addBotMessage(JSON.stringify(data));
-        }
-
-    
-}
 function addUserMessage(content) {
     const message = {
         role: 'user',
